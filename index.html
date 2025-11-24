@@ -1,68 +1,128 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Salavat Getir • Allahsalavat.com</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Amiri&family=Tajawal:wght@700&display=swap');
-    body {margin:0;background:#0a1a2e;color:#fff;font-family:'Tajawal',sans-serif;text-align:center;padding:20px;min-height:100vh;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(circle at center,#1e3c72,#0a1a2e);}
-    h1 {font-family:'Amiri',serif;font-size:3.5rem;color:#00ff9d;margin:0;}
-    .count {font-size:6rem;font-weight:bold;color:#ffd700;margin:30px 0;}
-    button {background:#00ff9d;color:#000;font-size:2rem;padding:20px 40px;border:none;border-radius:50px;cursor:pointer;box-shadow:0 10px 30px rgba(0,255,157,0.4);transition:0.3s;}
-    button:hover {transform:scale(1.1);background:#00cc7a;}
-    button:active {transform:scale(0.95);}
-    .heart {font-size:4rem;animation:beat 0.6s;}
-    @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
-    footer {margin-top:auto;padding:30px;font-size:1rem;opacity:0.8;}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Clicker 🚀</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 4rem;
+            margin-top: 30px;
+            text-shadow: 0 0 20px #fff;
+        }
+        #planet {
+            width: 250px;
+            height: 250px;
+            margin: 50px auto;
+            cursor: pointer;
+            transition: transform 0.1s;
+            user-select: none;
+        }
+        #planet:active {
+            transform: scale(0.9);
+        }
+        .score {
+            font-size: 5rem;
+            font-weight: bold;
+            margin: 20px;
+            text-shadow: 0 0 20px cyan;
+        }
+        .shop {
+            margin: 30px;
+        }
+        button {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid cyan;
+            color: white;
+            padding: 12px 25px;
+            margin: 8px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: cyan;
+            color: black;
+            transform: scale(1.1);
+        }
+        .particles {
+            position: absolute;
+            color: cyan;
+            font-weight: bold;
+            pointer-events: none;
+            animation: float 1s ease-out forwards;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
+    <h1>SPACE CLICKER 🚀</h1>
+    <div class="score" id="score">0</div>
+    <img src="https://i.ibb.co.com/0jK7Y7g/planet.png" id="planet" alt="Planet" onclick="tikla()">
+    
+    <div class="shop">
+        <button onclick="satınAl('auto', 100, 1)">Otomatik Tıklayıcı (100)</button>
+        <button onclick="satınAl('double', 500, 2)">2x Güç (500)</button>
+        <button onclick="satınAl('bonus', 5000, 10)">10x Bonus (5000)</button>
+    </div>
 
-  <h1>صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّمَ</h1>
-  <p>Allahümme salli ala seyyidina Muhammed</p>
-  
-  <div class="count" id="sayac">0</div>
-  <p id="bugun">Bugün: 0 salavat</p>
-  
-  <button onclick="salavatGetir()">🥰 Salavat Getir</button>
-  <div class="heart" id="kalp" style="display:none">🤲</div>
+    <script>
+        let puan = 0;
+        let tıklamaGücü = 1;
+        let autoClicker = 0;
 
-  <footer>Allahsalavat.com • Her tık sevap, her salavat nur 🤍</footer>
+        function tikla() {
+            puan += tıklamaGücü;
+            guncelle();
+            partiEfekti();
+        }
 
-  <script>
-    let toplam = localStorage.getItem("salavatToplam") ? parseInt(localStorage.getItem("salavatToplam")) : 0;
-    let bugun = localStorage.getItem("salavatBugun") ? parseInt(localStorage.getItem("salavatBugun")) : 0;
-    let sonGun = localStorage.getItem("sonGun") || "";
+        function guncelle() {
+            document.getElementById('score').textContent = puan.toLocaleString('tr-TR');
+        }
 
-    const today = new Date().toDateString();
-    if (sonGun !== today) {
-      bugun = 0;
-      localStorage.setItem("salavatBugun", 0);
-      localStorage.setItem("sonGun", today);
-    }
+        function partiEfekti() {
+            const p = document.createElement('div');
+            p.classList.add('particles');
+            p.textContent = '+' + tıklamaGücü;
+            p.style.left = Math.random() * window.innerWidth + 'px';
+            p.style.top = event.clientY + 'px';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 1000);
+        }
 
-    document.getElementById("sayac").textContent = toplam;
-    document.getElementById("bugun").textContent = `Bugün: ${bugun} salavat`;
+        function satınAl(tip, fiyat, etki) {
+            if (puan >= fiyat) {
+                puan -= fiyat;
+                if (tip === 'auto') autoClicker += etki;
+                if (tip === 'double') tıklamaGücü *= 2;
+                if (tip === 'bonus') tıklamaGücü += etki;
+                guncelle();
+            } else {
+                alert("Yeterli puan yok!");
+            }
+        }
 
-    function salavatGetir() {
-      toplam++;
-      bugun++;
-      localStorage.setItem("salavatToplam", toplam);
-      localStorage.setItem("salavatBugun", bugun);
-      localStorage.setItem("sonGun", today);
-
-      document.getElementById("sayac").textContent = toplam;
-      document.getElementById("bugun").textContent = `Bugün: ${bugun} salavat`;
-
-      const kalp = document.getElementById("kalp");
-      kalp.style.display = "block";
-      setTimeout(() => kalp.style.display = "none", 800);
-
-      // Hafif ses (isteğe bağlı, yorum satırını kaldırabilirsin)
-      // new Audio("https://cdn.islamic.audio/salavat.mp3").play().catch(()=>{});
-    }
-  </script>
-
+        // Otomatik tıklama
+        setInterval(() => {
+            if (autoClicker > 0) {
+                puan += autoClicker;
+                guncelle();
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
